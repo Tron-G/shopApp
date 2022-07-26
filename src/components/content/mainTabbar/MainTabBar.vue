@@ -71,4 +71,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#tab-bar {
+	z-index: 99;
+}
+</style>

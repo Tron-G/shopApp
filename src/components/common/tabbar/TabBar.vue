@@ -5,6 +5,9 @@
 </template>
 
 <script>
+/**
+ * app底部导航栏
+ * */
 export default {
 	name: "",
 	components: {},

@@ -13,14 +13,12 @@
 </template>
 
 <script>
+/**
+ * app顶部导航栏
+ * */
 export default {
 	name: "NavBar",
 	components: {},
-	data() {
-		return {};
-	},
-	computed: {},
-	methods: {},
 };
 </script>
 
@@ -30,6 +28,7 @@ export default {
 	height: 44px;
 	line-height: 44px;
 	text-align: center;
+	z-index: 99;
 	box-shadow: 0 2px 2px rgba(100, 100, 100, 0.1);
 }
 .left,
