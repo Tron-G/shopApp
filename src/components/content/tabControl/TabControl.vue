@@ -41,6 +41,9 @@ export default {
 			this.currentIndex = index;
 			this.$emit("tabClick", index);
 		},
+		indexChange(new_index) {
+			this.currentIndex = new_index;
+		},
 	},
 };
 </script>
@@ -51,6 +54,7 @@ export default {
 	text-align: center;
 	font-size: 16px;
 	background-color: #fff;
+	border: gainsboro solid 1px;
 }
 
 .tab-control-item {

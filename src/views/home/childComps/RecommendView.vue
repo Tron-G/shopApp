@@ -6,7 +6,7 @@
 			class="recommend-item"
 		>
 			<a :href="item.link">
-				<img :src="item.image" alt="" />
+				<img :src="item.image" alt="" @load="imageLoad" />
 				<div>{{ item.title }}</div>
 			</a>
 		</div>
@@ -29,10 +29,19 @@ export default {
 		},
 	},
 	data() {
-		return {};
+		return {
+			isload: false,
+		};
 	},
 	computed: {},
-	methods: {},
+	methods: {
+		imageLoad() {
+			if (!this.isload) {
+				this.isload = true;
+				this.$emit("recommendImageLoad", "recommend");
+			}
+		},
+	},
 };
 </script>
 

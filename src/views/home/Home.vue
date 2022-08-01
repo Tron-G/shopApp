@@ -5,6 +5,13 @@
 				<div id="home_title">购物街</div>
 			</template>
 		</nav-bar>
+		<tab-control
+			class="replace-tab-control"
+			:titles="titles"
+			@tabClick="tabClick"
+			v-show="isTabFixed"
+			ref="replace_tabControl"
+		></tab-control>
 
 		<scroll
 			class="content"
@@ -14,13 +21,20 @@
 			@scroll="contentScroll"
 			@pullingUp="loadMore"
 		>
-			<home-swiper :banners="banners"></home-swiper>
-			<recommend-view :recommends="recommends"></recommend-view>
-			<feature-view></feature-view>
+			<home-swiper
+				:banners="banners"
+				@swiperImageLoad="setTabControlTop"
+			></home-swiper>
+			<recommend-view
+				:recommends="recommends"
+				@recommendImageLoad="setTabControlTop"
+			></recommend-view>
+			<feature-view />
 			<tab-control
-				class="home-tab-control"
+				class="goods-tab-control"
 				:titles="titles"
 				@tabClick="tabClick"
+				ref="tabControl"
 			></tab-control>
 			<goods-list :goods="setGoodsData"></goods-list>
 		</scroll>
@@ -31,6 +45,7 @@
 <script>
 import NavBar from "@/components/common/navbar/NavBar";
 import Scroll from "@/components/common/scroll/Scroll.vue";
+
 import TabControl from "@/components/content/tabControl/TabControl.vue";
 import GoodsList from "@/components/content/goods/GoodsList.vue";
 import BackTop from "@/components/content/backTop/BackTop.vue";
@@ -65,14 +80,19 @@ export default {
 			},
 			currentType: "pop",
 			isShowBackTop: false,
+			tabOffsetTop: 0,
+			isTabFixed: false,
+			swiperImageLoaded: false,
+			recommendImageLoaded: false,
 		};
 	},
 	created() {
 		this.getHomeMultidata();
-		this.getHomeGoods("pop");
-		this.getHomeGoods("new");
-		this.getHomeGoods("sell");
+		this.getHomeGoodsData("pop");
+		this.getHomeGoodsData("new");
+		this.getHomeGoodsData("sell");
 	},
+	mounted() {},
 	computed: {
 		setGoodsData() {
 			return this.goods[this.currentType].list;
@@ -82,7 +102,6 @@ export default {
 		/**
 		 * 监听事件
 		 */
-
 		//商品浏览分类导航的监听
 		tabClick(index) {
 			switch (index) {
@@ -96,16 +115,33 @@ export default {
 					this.currentType = "sell";
 					break;
 			}
+			this.$refs.replace_tabControl.indexChange(index);
+			this.$refs.tabControl.indexChange(index);
 		},
 		backClick() {
 			this.$refs.scroll.scrollTo(0, 0);
 		},
 		contentScroll(pos) {
-			// console.log(pos);
+			//判断回到顶部按钮是否显示
 			this.isShowBackTop = -pos.y > 1000;
+			console.log(this.$refs.tabControl.$el.offsetTop + pos.y);
+			//判断tabControl是否吸顶
+			this.isTabFixed = this.tabOffsetTop + pos.y <= 0;
 		},
 		loadMore() {
-			this.getHomeGoods(this.currentType);
+			this.getHomeGoodsData(this.currentType);
+		},
+
+		setTabControlTop(type) {
+			if (type == "recommend") {
+				this.recommendImageLoaded = true;
+			}
+			if (type == "swiper") {
+				this.swiperImageLoaded = true;
+			}
+			if (this.swiperImageLoaded && this.recommendImageLoaded) {
+				this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
+			}
 		},
 		/**
 		 * 网络请求
@@ -118,14 +154,14 @@ export default {
 				// console.log(res.data);
 			});
 		},
-		getHomeGoods(type) {
+		getHomeGoodsData(type) {
 			const page = this.goods[type].page + 1;
 			getHomeGoods(type, page).then((res) => {
 				this.goods[type].list.push(...res.data.list);
 				this.goods[type].page += 1;
 				// console.log(type, this.goods[type]);
 				this.$refs.scroll.finishPullUp();
-				this.$refs.scroll.refresh();
+				// this.$refs.scroll.refresh();
 			});
 		},
 	},
@@ -134,12 +170,23 @@ export default {
 
 <style scoped>
 #home {
-	padding: 44px 0 49px;
+	position: relative;
 	height: 100vh;
 }
 #home_title {
 	letter-spacing: 2px;
 }
+
+.content {
+	position: absolute;
+	top: 44px;
+	bottom: 49px;
+	left: 0;
+	right: 0;
+	/* height: 300px; */
+	overflow: hidden;
+}
+
 .home-nav {
 	position: fixed;
 	top: 0;
@@ -149,14 +196,10 @@ export default {
 	color: white;
 	border-bottom: 1px solid rgba(100, 100, 100, 0.1);
 }
-.home-tab-control {
-	position: sticky;
+
+.replace-tab-control {
+	position: relative;
 	top: 44px;
 	z-index: 9;
-}
-.content {
-	height: 100%;
-	/* height: 300px; */
-	overflow: hidden;
 }
 </style>

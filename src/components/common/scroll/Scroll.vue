@@ -30,17 +30,20 @@ export default {
 		this.scroll = new BScroll(this.$refs.wrapper, {
 			click: true,
 			observeDOM: true,
+			observeImage: true,
 			probeType: this.probeType,
 			pullUpLoad: this.pullUpLoad,
 		});
-		this.scroll.on("scroll", (pos) => {
-			// console.log(pos);
-			this.$emit("scroll", pos);
-		});
-
-		this.scroll.on("pullingUp", () => {
-			this.$emit("pullingUp");
-		});
+		if (this.probeType == 2 || this.probeType == 3) {
+			this.scroll.on("scroll", (pos) => {
+				this.$emit("scroll", pos);
+			});
+		}
+		if (this.pullUpLoad) {
+			this.scroll.on("pullingUp", () => {
+				this.$emit("pullingUp");
+			});
+		}
 	},
 	computed: {},
 	methods: {
