@@ -1,6 +1,6 @@
 <template>
 	<div class="goods-item">
-		<img :src="goodsItem.show.img" alt="" />
+		<img :src="goodsItem.show.img" alt="" @click="itemClicked" />
 		<div class="goods-info">
 			<p>{{ goodsItem.title }}</p>
 			<span class="price">{{ goodsItem.price }}</span>
@@ -24,7 +24,17 @@ export default {
 	data() {
 		return {};
 	},
-	methods: {},
+	methods: {
+		itemClicked() {
+			// this.$router.push("/detail");
+			this.$router.push({
+				path: "/detail",
+				query: {
+					iid: this.goodsItem.iid,
+				},
+			});
+		},
+	},
 };
 </script>
 

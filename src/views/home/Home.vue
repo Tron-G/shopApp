@@ -21,14 +21,8 @@
 			@scroll="contentScroll"
 			@pullingUp="loadMore"
 		>
-			<home-swiper
-				:banners="banners"
-				@swiperImageLoad="setTabControlTop"
-			></home-swiper>
-			<recommend-view
-				:recommends="recommends"
-				@recommendImageLoad="setTabControlTop"
-			></recommend-view>
+			<home-swiper :banners="banners"></home-swiper>
+			<recommend-view :recommends="recommends"></recommend-view>
 			<feature-view />
 			<tab-control
 				class="goods-tab-control"
@@ -80,10 +74,8 @@ export default {
 			},
 			currentType: "pop",
 			isShowBackTop: false,
-			tabOffsetTop: 0,
 			isTabFixed: false,
-			swiperImageLoaded: false,
-			recommendImageLoaded: false,
+			saveY: 0,
 		};
 	},
 	created() {
@@ -93,9 +85,22 @@ export default {
 		this.getHomeGoodsData("sell");
 	},
 	mounted() {},
+	destroyed() {
+		console.log("destroy");
+	},
+	activated() {
+		this.$refs.scroll.scrollTo(0, this.saveY);
+		this.$refs.scroll.refresh();
+	},
+	deactivated() {
+		this.saveY = this.$refs.scroll.getScrollY();
+	},
 	computed: {
 		setGoodsData() {
 			return this.goods[this.currentType].list;
+		},
+		tabControlTop() {
+			return this.$refs.tabControl.$el.offsetTop;
 		},
 	},
 	methods: {
@@ -117,6 +122,7 @@ export default {
 			}
 			this.$refs.replace_tabControl.indexChange(index);
 			this.$refs.tabControl.indexChange(index);
+			// this.$refs.scroll.scrollTo(0, -this.tabControlTop, 2);
 		},
 		backClick() {
 			this.$refs.scroll.scrollTo(0, 0);
@@ -124,24 +130,11 @@ export default {
 		contentScroll(pos) {
 			//判断回到顶部按钮是否显示
 			this.isShowBackTop = -pos.y > 1000;
-			console.log(this.$refs.tabControl.$el.offsetTop + pos.y);
 			//判断tabControl是否吸顶
-			this.isTabFixed = this.tabOffsetTop + pos.y <= 0;
+			this.isTabFixed = this.tabControlTop + pos.y <= 0;
 		},
 		loadMore() {
 			this.getHomeGoodsData(this.currentType);
-		},
-
-		setTabControlTop(type) {
-			if (type == "recommend") {
-				this.recommendImageLoaded = true;
-			}
-			if (type == "swiper") {
-				this.swiperImageLoaded = true;
-			}
-			if (this.swiperImageLoaded && this.recommendImageLoaded) {
-				this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
-			}
 		},
 		/**
 		 * 网络请求
