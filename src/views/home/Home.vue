@@ -8,7 +8,7 @@
 		<tab-control
 			class="replace-tab-control"
 			:titles="titles"
-			@tabClick="tabClick"
+			@tab-click="tabClick"
 			v-show="isTabFixed"
 			ref="replace_tabControl"
 		></tab-control>
@@ -19,7 +19,7 @@
 			:probe-type="2"
 			:pull-up-load="true"
 			@scroll="contentScroll"
-			@pullingUp="loadMore"
+			@pulling-up="loadMore"
 		>
 			<home-swiper :banners="banners"></home-swiper>
 			<recommend-view :recommends="recommends"></recommend-view>
@@ -27,7 +27,7 @@
 			<tab-control
 				class="goods-tab-control"
 				:titles="titles"
-				@tabClick="tabClick"
+				@tab-click="tabClick"
 				ref="tabControl"
 			></tab-control>
 			<goods-list :goods="setGoodsData"></goods-list>
@@ -42,7 +42,6 @@ import Scroll from "@/components/common/scroll/Scroll.vue";
 
 import TabControl from "@/components/content/tabControl/TabControl.vue";
 import GoodsList from "@/components/content/goods/GoodsList.vue";
-import BackTop from "@/components/content/backTop/BackTop.vue";
 
 import HomeSwiper from "./childComps/HomeSwiper.vue";
 import RecommendView from "./childComps/RecommendView.vue";
@@ -50,18 +49,21 @@ import FeatureView from "./childComps/FeatureView.vue";
 
 import { getHomeMultidata, getHomeGoods } from "network/home.js";
 
+import { backTopMixin } from "@/common/mixin";
+
 export default {
 	name: "Home",
+	mixins: [backTopMixin],
 	components: {
 		NavBar,
 		Scroll,
 		TabControl,
 		GoodsList,
-		BackTop,
 		HomeSwiper,
 		RecommendView,
 		FeatureView,
 	},
+
 	data() {
 		return {
 			banners: [],
@@ -124,12 +126,12 @@ export default {
 			this.$refs.tabControl.indexChange(index);
 			// this.$refs.scroll.scrollTo(0, -this.tabControlTop, 2);
 		},
-		backClick() {
-			this.$refs.scroll.scrollTo(0, 0);
-		},
+		// backClick() {
+		// 	this.$refs.scroll.scrollTo(0, 0);
+		// },
 		contentScroll(pos) {
 			//判断回到顶部按钮是否显示
-			this.isShowBackTop = -pos.y > 1000;
+			this.listenShowBackTop(pos);
 			//判断tabControl是否吸顶
 			this.isTabFixed = this.tabControlTop + pos.y <= 0;
 		},
@@ -168,6 +170,7 @@ export default {
 }
 #home_title {
 	letter-spacing: 2px;
+	font-weight: bold;
 }
 
 .content {

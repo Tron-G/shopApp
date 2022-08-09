@@ -1,6 +1,14 @@
+<!--
+ * @Author: tron 1285771266@qq.com
+ * @Date: 2022-07-25 20:37:03
+ * @LastEditors: tron 1285771266@qq.com
+ * @LastEditTime: 2022-08-08 16:16:30
+ * @FilePath: \shopapp\src\components\content\goods\GoodsListItem.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
 	<div class="goods-item">
-		<img :src="goodsItem.show.img" alt="" @click="itemClicked" />
+		<img :src="showImage" alt="" @click="itemClicked" />
 		<div class="goods-info">
 			<p>{{ goodsItem.title }}</p>
 			<span class="price">{{ goodsItem.price }}</span>
@@ -24,9 +32,15 @@ export default {
 	data() {
 		return {};
 	},
+	computed: {
+		showImage() {
+			return this.goodsItem.image || this.goodsItem.show.img;
+		},
+	},
 	methods: {
 		itemClicked() {
 			// this.$router.push("/detail");
+			// console.log(this.goodsItem);
 			this.$router.push({
 				path: "/detail",
 				query: {

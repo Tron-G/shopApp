@@ -1,3 +1,11 @@
+<!--
+ * @Author: tron 1285771266@qq.com
+ * @Date: 2022-08-02 22:11:30
+ * @LastEditors: tron 1285771266@qq.com
+ * @LastEditTime: 2022-08-08 21:00:34
+ * @FilePath: \shopapp\src\views\detail\childComps\DetailNavBar.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
 	<div id="detail-navbar">
 		<nav-bar class="detial-nav">
@@ -39,9 +47,13 @@ export default {
 	methods: {
 		itemClick(index) {
 			this.currentIndex = index;
+			this.$emit("item-click", index);
 		},
 		backClick() {
 			this.$router.go(-1);
+		},
+		changeIndex(new_index) {
+			this.currentIndex = new_index;
 		},
 	},
 };

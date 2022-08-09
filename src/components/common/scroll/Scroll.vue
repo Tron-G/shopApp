@@ -41,7 +41,7 @@ export default {
 		}
 		if (this.pullUpLoad) {
 			this.scroll.on("pullingUp", () => {
-				this.$emit("pullingUp");
+				this.$emit("pulling-up");
 			});
 		}
 	},

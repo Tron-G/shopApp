@@ -39,7 +39,7 @@ export default {
 		},
 		itemClicked(index) {
 			this.currentIndex = index;
-			this.$emit("tabClick", index);
+			this.$emit("tab-click", index);
 		},
 		indexChange(new_index) {
 			this.currentIndex = new_index;

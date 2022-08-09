@@ -20,7 +20,7 @@ export default {
 .back-top {
 	position: fixed;
 	z-index: 9;
-	bottom: 52px;
+	bottom: 62px;
 	right: 5px;
 }
 .back-top img {
