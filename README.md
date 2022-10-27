@@ -28,8 +28,8 @@
 项目效果图：
 
 1. 首页
-
+![demo1](https://github.com/Tron-G/shopApp/blob/dev/demo1.gif)
 
 2. 商品详情页，及购物车
 
-
+![demo1](https://github.com/Tron-G/shopApp/blob/dev/demo2.gif)
