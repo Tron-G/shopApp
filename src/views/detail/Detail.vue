@@ -73,7 +73,6 @@ export default {
 		GoodsList,
 		Scroll,
 	},
-
 	data() {
 		return {
 			iid: null,
@@ -130,7 +129,6 @@ export default {
 					this.themeTopY.push(Number.MAX_VALUE);
 				}, 200);
 			});
-
 			// this.$nextTick(() => {
 			// 	this.themeTopY.push(0);
 			// 	this.themeTopY.push(this.$refs.params.$el.offsetTop);
@@ -139,7 +137,6 @@ export default {
 			// 	console.log(this.themeTopY);
 			// });
 		});
-
 		getRecommend().then((res) => {
 			this.recommends = res.data.list;
 		});
